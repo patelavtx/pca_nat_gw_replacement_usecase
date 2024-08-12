@@ -1,5 +1,19 @@
+###################################################################################################################################################################################################
+
+#######################################
+####
+#### Main Variables Creation
+####
+#######################################
+
+
 variable "aviatrix_aws_account_name" {
   description = "Aviatrix AWS Account Name"
+}
+
+variable "aws_region" {
+  description = "AWS Region"
+  default     = "us-east-2"
 }
 
 # variable "aws_key_pair_name" {
@@ -11,6 +25,39 @@ variable "avx_gateway_size" {
   default = "t3.micro"
   
 }
+
+variable "number_of_azs" {
+  description = "Number of Availability Zones in each VPC"
+  default = 2
+}
+
+variable "deploy_avx_egress_gateways" {
+  type = bool
+  description = "Stage the deployment of Aviatrix Gateways in VPC 1"
+  default = true
+}
+
+variable "tags" {
+  description = "A map of the tags to use for the resources that are deployed."
+  type        = map(string)
+
+  default = {
+    avxlab = "microseg"
+  }
+}
+
+
+
+
+
+###################################################################################################################################################################################################
+
+#######################################
+####
+#### Booleans Creation
+####
+#######################################
+
 
 variable "deploy_aws_tgw" {
   type = bool
@@ -30,20 +77,9 @@ variable "deploy_aws_workloads" {
   default = true
 }
 
-variable "number_of_azs" {
-  description = "Number of Availability Zones in each VPC"
-  default = 2
-}
-
-variable "deploy_avx_egress_gateways" {
+variable "deploy_dfw_egress_policy" {
   type = bool
-  description = "Stage the deployment of Aviatrix Gateways in VPC 1"
-  default = true
-}
-
-variable "enable_nat_avx_egress_gateways" {
-  type = bool
-  description = "Enable NAT on the Aviatrix Egress Gateways"
+  description = "Deploy a Aviatrix Secure Egress configuration leveraging Egress 2.0."
   default = false
 }
 
@@ -53,22 +89,9 @@ variable "deploy_avx_egress_policy" {
   default = false
 }
 
-variable "deploy_dfw_egress_policy" {
+variable "enable_nat_avx_egress_gateways" {
   type = bool
-  description = "Deploy a Aviatrix Secure Egress configuration leveraging Egress 2.0."
+  description = "Enable NAT on the Aviatrix Egress Gateways"
   default = false
 }
 
-variable "tags" {
-  description = "A map of the tags to use for the resources that are deployed."
-  type        = map(string)
-
-  default = {
-    avxlab = "microseg"
-  }
-}
-
-variable "aws_region" {
-  description = "AWS Region"
-  default     = "us-east-2"
-}
