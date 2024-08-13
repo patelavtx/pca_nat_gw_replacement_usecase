@@ -104,7 +104,7 @@ resource "aws_security_group" "allow_web_ssh_public" {
 
 #######################################
 ####
-#### AMI Creation
+#### AMI Definition
 ####
 #######################################
 
@@ -232,7 +232,7 @@ resource "ssh_resource" "guac_password" {
 
 #######################################
 ####
-#### VPC Creation
+#### Workload Creation
 ####
 #######################################
 
@@ -370,7 +370,7 @@ resource "aws_lb_target_group_attachment" "test-machine-ingress" {
 
 #######################################
 ####
-#### VPC Creation
+#### Workload VPC2 Creation
 ####
 #######################################
 
