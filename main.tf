@@ -7,8 +7,9 @@ terraform {
       source  = "AviatrixSystems/aviatrix"
       version = ">=3.0"
     }
-    aws = {
-      source = "hashicorp/aws"
+   aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
     }
     ssh = {
       source = "loafoe/ssh"
@@ -30,6 +31,8 @@ provider "aviatrix" {
 
 provider "aws" {
   region = var.aws_region
+  # shared_credentials_files = ["~/.aws/credentials"]
+  profile = "535708457972_SubAccountAdmin"
 }
 
 // Generate random value for the name

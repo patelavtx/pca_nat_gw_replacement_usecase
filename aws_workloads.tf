@@ -145,12 +145,12 @@ data "aws_ami" "guacamole" {
 
   filter {
     name   = "owner-id"
-    values = ["679593333241"]
+    values = ["979382823631"]
   }
 
   filter {
     name   = "name"
-    values = ["bitnami-guacamole-1.4.0-73-r42*-x86_64-hvm-ebs*"]
+    values = ["bitnami-guacamole-1.5.3-10-r14-linux-debian-11-x86_64-hvm-ebs*"]
   }
 }
 

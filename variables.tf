@@ -6,6 +6,11 @@
 ####
 #######################################
 
+variable "aws_credentials_path" {
+  description = ".aws/credentials"
+  default     = "~/.aws/credentials"
+}
+
 
 variable "aviatrix_aws_account_name" {
   description = "Aviatrix AWS Account Name"
