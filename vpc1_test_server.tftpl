@@ -13,14 +13,26 @@ endpoints:
     group: Internet
     conditions:
       - "[STATUS] == 200"
+  - name: www.ubuntu.com
+    url: "https://www.ubuntu.com"
+    interval: 5s
+    group: Internet
+    conditions:
+      - "[STATUS] == 200"
+  - name: www.github.com
+    url: "https://www.github.com"
+    interval: 5s
+    group: Internet
+    conditions:
+      - "[STATUS] == 200"
   - name: www.facebook.com
     url: "https://www.facebook.com"
     interval: 5s
     group: Internet
     conditions:
       - "[STATUS] == 200"
-  - name: portal.azure.com
-    url: "https://portal.azure.com/"
+  - name: www.gitlab.com
+    url: "https://www.gitlab.com/"
     interval: 5s
     group: Internet
     conditions:

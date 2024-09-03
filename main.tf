@@ -32,7 +32,7 @@ provider "aviatrix" {
 provider "aws" {
   region = var.aws_region
   # shared_credentials_files = ["~/.aws/credentials"]
-  profile = "535708457972_SubAccountAdmin"
+  profile = "SubAccountAdmin-535708457972"
 }
 
 // Generate random value for the name
