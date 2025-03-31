@@ -100,3 +100,16 @@ variable "enable_nat_avx_egress_gateways" {
   default = false
 }
 
+#  controllerstuff
+variable "controller_ip" {
+  description = "ctl"
+}
+
+variable "controller_password" {
+  description = "ctl"
+}
+
+variable "controller_username" {
+  description = "ctl"
+  default     = "admin"
+}

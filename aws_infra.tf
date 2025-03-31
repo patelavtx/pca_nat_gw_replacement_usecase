@@ -139,7 +139,7 @@ resource "aws_subnet" "private_vpc2" {
 # Create the EIPs for the NAT gateways
 resource "aws_eip" "natgws" {
   count = (var.deploy_aws_tgw || var.deploy_aviatrix_transit) ? var.number_of_azs + 1 : var.number_of_azs
-  vpc   = true
+  domain   = "vpc"
   tags = {
     Name = "natgw-eip-${count.index}"
   }

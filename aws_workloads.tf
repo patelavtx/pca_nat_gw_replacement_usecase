@@ -2,7 +2,7 @@
 
 #######################################
 ####
-#### SSH Key Creation
+#### SSH Key Creation  - EC2 key pair in AWS
 ####
 #######################################
 
@@ -27,7 +27,7 @@ module "key_pair" {
 
 
 resource "aws_security_group" "allow_all_rfc1918" {
-  count       = var.deploy_aws_tgw ? 2 : 1
+  count       = var.deploy_aws_tgw ? 2 : 1                         # if true,   2x SGs ; otherwise 1xSG
   name        = "allow_all_rfc1918_vpc${count.index + 1}"
   description = "allow_all_rfc1918_vpc${count.index + 1}"
   vpc_id      = aws_vpc.default[count.index].id
@@ -36,7 +36,7 @@ resource "aws_security_group" "allow_all_rfc1918" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["10.0.0.0/8"]
+    cidr_blocks = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
   }
 
   egress {
@@ -145,18 +145,17 @@ data "aws_ami" "guacamole" {
 
   filter {
     name   = "owner-id"
-    values = ["979382823631"]
+    values = ["979382823631"]                 # Bitnami's AWS account id
   }
 
   filter {
     name   = "name"
-    values = ["bitnami-guacamole-1.5.3-10-r14-linux-debian-11-x86_64-hvm-ebs*"]
+    # aws ec2 describe-images --owners 979382823631 --filters "Name=name,Values=bitnami-guacamole-*" --query "Images[*].{ID:ImageId,Name:Name}" --region us-east-1 
+    values = ["bitnami-guacamole-1.5.3-24-r31-linux-debian-11-x86_64-hvm-ebs*"]
   }
 }
-
-
-
-###################################################################################################################################################################################################
+  
+  ###############################################################################################################################################################################################
 
 #######################################
 ####
@@ -192,7 +191,7 @@ module "ec2_instance_guacamole" {
 # Assign an EIP to Guacamole so that the URL doesn't change across reboots
 resource "aws_eip" "guacamole" {
   count = var.deploy_aws_workloads ? 1 : 0
-  vpc   = true
+  domain   = "vpc"
 
   instance                  = module.ec2_instance_guacamole[0].id
   associate_with_private_ip = module.ec2_instance_guacamole[0].private_ip

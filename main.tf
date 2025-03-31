@@ -22,7 +22,11 @@ terraform {
 #change
 
 provider "aviatrix" {
+  controller_ip = var.controller_ip
+  username      = var.controller_username
+  password      = var.controller_password
   skip_version_validation = true
+
 }
 
 
@@ -32,7 +36,7 @@ provider "aviatrix" {
 provider "aws" {
   region = var.aws_region
   # shared_credentials_files = ["~/.aws/credentials"]
-  profile = "xxxxxxx"
+  # profile = "xxxxxxx"
 }
 
 // Generate random value for the name
