@@ -82,6 +82,13 @@ resource "aws_security_group" "allow_web_ssh_public" {
     protocol    = "tcp"
     cidr_blocks = ["${chomp(data.http.myip.response_body)}/32"]
   }
+  ingress {
+    description = "guaca-HTTP"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["${chomp(data.http.myip.response_body)}/32"]
+  }
 
   egress {
     from_port        = 0
@@ -112,15 +119,17 @@ resource "aws_security_group" "allow_web_ssh_public" {
 data "aws_ami" "amazon-linux-2" {
   most_recent = true
 
-  filter {
-    name   = "owner-alias"
-    values = ["amazon"]
-  }
+  #filter {
+  #  name   = "owner-alias"
+  #  values = ["amazon"]
+  #}
 
   filter {
     name   = "name"
     values = ["amzn2-ami-hvm-*-x86_64-ebs"]
   }
+
+  owners = ["137112412989"]  #Official Amazon Linux owner ID
 }
 
 data "aws_ami" "windows" {
@@ -134,10 +143,11 @@ data "aws_ami" "windows" {
     name   = "virtualization-type"
     values = ["hvm"]
   }
-  filter {
-    name   = "owner-alias"
-    values = ["amazon"]
-  }
+  #filter {
+  #  name   = "owner-alias"
+  #  values = ["amazon"]
+  #}
+  owners = ["801119661308"]     #Official Microsoft Windows AMIs published by Amazon
 }
 
 data "aws_ami" "guacamole" {
@@ -151,7 +161,7 @@ data "aws_ami" "guacamole" {
   filter {
     name   = "name"
     # aws ec2 describe-images --owners 979382823631 --filters "Name=name,Values=bitnami-guacamole-*" --query "Images[*].{ID:ImageId,Name:Name}" --region us-east-1 
-    values = ["bitnami-guacamole-1.5.3-24-r31-linux-debian-11-x86_64-hvm-ebs*"]
+    values = ["bitnami-guacamole-1.5.5-1-r01-linux-debian-12-x86_64-hvm-ebs*"]
   }
 }
   
@@ -190,7 +200,7 @@ module "ec2_instance_guacamole" {
 
 # Assign an EIP to Guacamole so that the URL doesn't change across reboots
 resource "aws_eip" "guacamole" {
-  count = var.deploy_aws_workloads ? 1 : 0
+  count  = var.deploy_aws_workloads ? 1 : 0
   domain   = "vpc"
 
   instance                  = module.ec2_instance_guacamole[0].id
@@ -406,4 +416,43 @@ depends_on = [
 
 
 
+
+#####################  test adding gucamole behind ELB ########################
+
+resource "aws_lb_listener" "guaca-ingress" {
+  count             = var.guaca_elb ? 1 : 0
+  load_balancer_arn = aws_lb.test-machine-ingress[0].arn
+  port              = "8080"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.guaca-ingress[count.index].arn
+  }
+}
+
+resource "aws_lb_target_group" "guaca-ingress" {
+  count       = var.guaca_elb ? 1 : 0
+  name        = "guaca-elb"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = aws_vpc.default[0].id
+  health_check {
+    path                = "/"
+    port                = 80
+    healthy_threshold   = 6
+    unhealthy_threshold = 2
+    timeout             = 2
+    interval            = 5
+    matcher             = "200,302" # has to be HTTP 200 or fails
+  }
+}
+
+resource "aws_lb_target_group_attachment" "guaca-ingress" {
+  count            = var.guaca_elb ? 1 : 0
+  target_group_arn = aws_lb_target_group.guaca-ingress[count.index].arn
+  target_id        = module.ec2_instance_guacamole[0].private_ip 
+  port             = 80
+}
 

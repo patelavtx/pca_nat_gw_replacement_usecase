@@ -18,7 +18,7 @@ variable "aviatrix_aws_account_name" {
 
 variable "aws_region" {
   description = "AWS Region"
-  default     = "us-east-2"
+  default     = "eu-west-2"
 }
 
 # variable "aws_key_pair_name" {
@@ -51,9 +51,24 @@ variable "tags" {
   }
 }
 
+# avtx spoke
+variable "deploy_avxspoke" {
+  type = bool
+  description = "avx-spoke"
+  default = false
+}
 
+variable "spoke_attached" {
+  type = bool
+  description = "avx-spoke"
+  default = false
+}
 
-
+variable "single_ip_snat" {
+  type = bool
+  description = "avx-spoke"
+  default = false
+}
 
 ###################################################################################################################################################################################################
 
@@ -112,4 +127,13 @@ variable "controller_password" {
 variable "controller_username" {
   description = "ctl"
   default     = "admin"
+}
+
+
+
+## guaca
+variable "guaca_elb" {
+  type = bool
+  description = "guaca behind elb"
+  default = false
 }

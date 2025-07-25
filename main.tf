@@ -1,15 +1,15 @@
 
-
+# Provider declaration and icanhazip.com
 
 terraform {
   required_providers {
     aviatrix = {
       source  = "AviatrixSystems/aviatrix"
-      version = ">=3.0"
+      version = "~>3.1"
     }
    aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0"
+      #version = "~> 5.0"
     }
     ssh = {
       source = "loafoe/ssh"
@@ -30,14 +30,11 @@ provider "aviatrix" {
 }
 
 
-
-
-
 provider "aws" {
-  region = var.aws_region
-  # shared_credentials_files = ["~/.aws/credentials"]
-  # profile = "xxxxxxx"
+  #region = var.aws_region
+  profile = "atul-basecamp"
 }
+
 
 // Generate random value for the name
 resource "random_string" "name" {
